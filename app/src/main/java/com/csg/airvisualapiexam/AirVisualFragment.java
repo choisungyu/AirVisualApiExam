@@ -59,9 +59,7 @@ public class AirVisualFragment extends Fragment {
         service.getPollutions().enqueue(new Callback<Pollutions>() {
             @Override
             public void onResponse(Call<Pollutions> call, Response<Pollutions> response) {
-//                mBinding.setPollution(response.body().getData().getCurrent().getPollution());
-
-                mBinding.setPollution(response.body().getData().getCurrent().getPollution());
+                mBinding.setPollution(response.body());
             }
 
             @Override

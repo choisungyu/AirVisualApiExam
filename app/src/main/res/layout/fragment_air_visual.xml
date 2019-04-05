@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
             name="pollution"
-            type="com.csg.airvisualapiexam.models.Pollution" />
+            type="com.csg.airvisualapiexam.models.Pollutions" />
 
 
     </data>
@@ -14,6 +15,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="center_vertical"
         android:orientation="vertical"
         tools:context=".AirVisualFragment">
 
@@ -21,15 +23,37 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="asdasd"
-            android:text="@{Integer.toString(pollution.aqius)}" />
+            android:gravity="center"
+            android:text="@{Integer.toString(pollution.data.current.pollution.aqius)}"
+            tools:text="미세먼지" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="12312313"
+            android:gravity="center"
+            app:city="@{pollution.data.city}"
+            tools:text="city" />
 
-            android:text="@{pollution.ts}" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@{Integer.toString(pollution.data.current.weather.hu)}"
+            tools:text="humid" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            app:windSpeed="@{Double.toString(pollution.data.current.weather.ws)}"
+            tools:text="windSpeed" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            app:aqius="@{pollution.data.current.pollution.aqius}"
+            tools:text="보통" />
 
 
     </LinearLayout>

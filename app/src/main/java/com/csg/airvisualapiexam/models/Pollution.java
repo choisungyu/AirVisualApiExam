@@ -1,5 +1,7 @@
 package com.csg.airvisualapiexam.models;
 
+import android.databinding.BindingAdapter;
+
 public class Pollution {
 
     private String ts;
