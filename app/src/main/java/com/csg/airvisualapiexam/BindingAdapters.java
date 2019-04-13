@@ -1,7 +1,10 @@
 package com.csg.airvisualapiexam;
 
 import android.databinding.BindingAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 public class BindingAdapters {
     @BindingAdapter("aqius")
@@ -25,6 +28,12 @@ public class BindingAdapters {
     @BindingAdapter("windSpeed")
     public static void windSpeed(TextView textView, String windSpeed) {
         textView.setText("풍속 : " + windSpeed);
+
+    }
+
+    @BindingAdapter("tempUrl")
+    public static void tempUrl(ImageView imageView, String tempUrl) {
+        Glide.with(imageView.getContext()).load("https://airvisual.com/images/" + tempUrl + ".png").into(imageView);
 
     }
 

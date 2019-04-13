@@ -55,6 +55,11 @@
             app:aqius="@{pollution.data.current.pollution.aqius}"
             tools:text="보통" />
 
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:tempUrl="@{pollution.data.current.weather.ic}" />
+
 
     </LinearLayout>
 </layout>
