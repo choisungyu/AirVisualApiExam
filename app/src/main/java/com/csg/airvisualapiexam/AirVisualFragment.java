@@ -50,7 +50,7 @@ public class AirVisualFragment extends Fragment {
 //        checkTedPermission();
 //        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity());
 
-            }
+    }
 
 
 //    private void checkTedPermission() {
@@ -94,14 +94,7 @@ public class AirVisualFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
-        Button button = view.findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(requireContext(), "" + LATITUDE + "," + LONGITUDE, Toast.LENGTH_SHORT).show();
-
-            }
-        });
+        Toast.makeText(requireContext(), "" + LATITUDE + "," + LONGITUDE, Toast.LENGTH_SHORT).show();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.airvisual.com/")
@@ -133,7 +126,6 @@ public class AirVisualFragment extends Fragment {
                 Log.d("AirVisualFragment", "onFailure: " + t.getLocalizedMessage());
             }
         });
-
 
 
     }
