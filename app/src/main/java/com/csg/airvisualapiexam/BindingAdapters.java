@@ -10,14 +10,24 @@ public class BindingAdapters {
     @BindingAdapter("aqius")
     public static void aqius(TextView textView, int aqius) {
         if (aqius <= 15) {
-            textView.setText("좋음");
+            textView.setText("미세먼지 : 좋음");
         } else if (aqius <= 50) {
-            textView.setText("보통");
+            textView.setText("미세먼지 : 보통");
         } else if (aqius <= 100) {
-            textView.setText("나쁨");
+            textView.setText("미세먼지 : 나쁨");
         } else {
-            textView.setText("매우나쁨");
+            textView.setText("미세먼지 : 매우나쁨");
         }
+    }
+
+    @BindingAdapter("fineDust")
+    public static void fineDust(TextView textView, int aqius) {
+        textView.setText("미세먼지농도 : " + aqius);
+    }
+
+    @BindingAdapter("humid")
+    public static void humid(TextView textView, String humid) {
+        textView.setText("습도 : " + humid);
     }
 
     @BindingAdapter("city")

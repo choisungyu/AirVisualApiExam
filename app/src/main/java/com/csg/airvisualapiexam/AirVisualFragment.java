@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.csg.airvisualapiexam.databinding.FragmentAirVisualBinding;
 import com.csg.airvisualapiexam.models.Pollutions;
@@ -22,7 +24,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AirVisualFragment extends Fragment {
 
+    public static final double LATITUDE = 37.4883078;
+    public static final double LONGITUDE = 126.8096653;
     private FragmentAirVisualBinding mBinding;
+//    private FusedLocationProviderClient mFusedLocationProviderClient;
+//    private double mLatitude;
+//    private double mLongitude;
+
 
     public AirVisualFragment() {
     }
@@ -37,7 +45,44 @@ public class AirVisualFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
+
+
+//        checkTedPermission();
+//        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity());
+
+            }
+
+
+//    private void checkTedPermission() {
+//
+//        PermissionListener permissionlistener = new PermissionListener() {
+//            @SuppressLint("MissingPermission")
+//            @Override
+//            public void onPermissionGranted() {
+//                mFusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<Location> task) {
+//                        mLatitude = LATITUDE;
+//                        mLongitude = LONGITUDE;
+//                    }
+//                });
+//            }
+//
+//            @Override
+//            public void onPermissionDenied(List<String> deniedPermissions) {
+//                Toast.makeText(requireActivity(), "권한이 없습니다.\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
+//            }
+//
+//
+//        };
+//
+//        TedPermission.with(requireActivity())
+//                .setPermissionListener(permissionlistener)
+//                .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]")
+//                .setPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+//                .check();
+//    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,6 +94,15 @@ public class AirVisualFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
+        Button button = view.findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(requireContext(), "" + LATITUDE + "," + LONGITUDE, Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.airvisual.com/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -56,7 +110,19 @@ public class AirVisualFragment extends Fragment {
 
         JsonAirVisualService service = retrofit.create(JsonAirVisualService.class);
 
-        service.getPollutions().enqueue(new Callback<Pollutions>() {
+//        service.getPollutions().enqueue(new Callback<Pollutions>() {
+//            @Override
+//            public void onResponse(Call<Pollutions> call, Response<Pollutions> r  esponse) {
+//                mBinding.setPollution(response.body());
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Pollutions> call, Throwable t) {
+//                Log.d("AirVisualFragment", "onFailure: " + t.getLocalizedMessage());
+//            }
+//        });
+
+        service.getData().enqueue(new Callback<Pollutions>() {
             @Override
             public void onResponse(Call<Pollutions> call, Response<Pollutions> response) {
                 mBinding.setPollution(response.body());
@@ -67,5 +133,8 @@ public class AirVisualFragment extends Fragment {
                 Log.d("AirVisualFragment", "onFailure: " + t.getLocalizedMessage());
             }
         });
+
+
+
     }
 }

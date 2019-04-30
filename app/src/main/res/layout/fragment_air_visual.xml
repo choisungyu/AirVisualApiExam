@@ -20,10 +20,16 @@
         tools:context=".AirVisualFragment">
 
         <!-- TODO: Update blank fragment layout -->
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="@{Integer.toString(pollution.data.current.pollution.aqius)}"-->
+            <!--tools:text="미세먼지" />-->
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{Integer.toString(pollution.data.current.pollution.aqius)}"
+            app:fineDust="@{pollution.data.current.pollution.aqius}"
             tools:text="미세먼지" />
 
         <TextView
@@ -35,7 +41,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{Integer.toString(pollution.data.current.weather.hu)}"
+            app:humid="@{Integer.toString(pollution.data.current.weather.hu)}"
             tools:text="humid" />
 
         <TextView
@@ -55,7 +61,6 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             app:tempUrl="@{pollution.data.current.weather.ic}" />
-
 
     </LinearLayout>
 </layout>
