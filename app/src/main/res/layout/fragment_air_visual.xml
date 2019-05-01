@@ -13,11 +13,12 @@
     </data>
 
     <LinearLayout
+        android:id="@+id/airvisual"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        tools:context=".AirVisualFragment">
+        tools:context=".ui.AirVisualFragment">
 
         <!-- TODO: Update blank fragment layout -->
         <!--<TextView-->

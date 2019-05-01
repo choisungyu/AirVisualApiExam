@@ -1,4 +1,4 @@
-package com.csg.airvisualapiexam;
+package com.csg.airvisualapiexam.ui;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -9,9 +9,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
+import com.csg.airvisualapiexam.JsonAirVisualService;
+import com.csg.airvisualapiexam.R;
 import com.csg.airvisualapiexam.databinding.FragmentAirVisualBinding;
 import com.csg.airvisualapiexam.models.Pollutions;
 
