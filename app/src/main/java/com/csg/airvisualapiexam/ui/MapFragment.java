@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -45,19 +47,22 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MapFragment extends Fragment implements OnMapReadyCallback {
+public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
 
     private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 1000;
     private GoogleMap mMap;
     private static final String TAG = MapFragment.class.getSimpleName();
     private PlacesClient mPlacesClient;
     private Favorite mFavorite;
-    
+
     //--------
     private FusedLocationProviderClient mFusedLocationProviderClient;
 
@@ -80,9 +85,43 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
 
-        }
+        // 자기 현재 위치 표시하기
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext());
+        // 위치 결과을 콜백으로 받음
+        mLocationCallback = new LocationCallback() {
+
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if (locationResult == null) {
+                    return;
+                }
+                for (Location location : locationResult.getLocations()) {
+                    mCurrentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+
+                    // 자기위치 마커 생성
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    markerOptions.position(mCurrentLocation);
+                    markerOptions.title("현재위치" + mCurrentLocation.longitude + mCurrentLocation.latitude);
+                    mMap.addMarker(markerOptions);
+
+                    // 위치로 이동
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mCurrentLocation, 15.0f));
+                    Toast.makeText(requireContext(), "위치갱신", Toast.LENGTH_SHORT).show();
+                    // 진짜 위치 정보
+                }
+            }
+
+
+        };
+        // locationRequest 생성
+        locationRequest = LocationRequest.create();
+
+        // 추가적인 베터리 소모 업이 위치정보 획득
+        locationRequest.setPriority(LocationRequest.PRIORITY_NO_POWER);
+//        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+
     }
 
     @Override
@@ -99,36 +138,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext());
-
-        mLocationCallback = new LocationCallback() {
-
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                if (locationResult == null) {
-                    return;
-                }
-                // 진짜 위치 정보
-                for (Location location : locationResult.getLocations()) {
-                    mCurrentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-
-                    // 마커 생성
-                    MarkerOptions markerOptions = new MarkerOptions();
-                    markerOptions.position(mCurrentLocation);
-                    markerOptions.title("현재위치");
-                    mMap.addMarker(markerOptions);
-
-                    //
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mCurrentLocation, 15.0f));
-                    Toast.makeText(requireContext(), "위치갱신", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-
-        };
-        // locationRequest 생성
-        locationRequest = LocationRequest.create();
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         //----------autocompleteFragment
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
@@ -148,6 +157,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 Log.d(TAG, "Place: " + place.toString());
 
                 // place 객체 범주가 넓다 보니깐 favorite 에 옮겨 심는 것
+                // -- 옮겨 빼 놓는 이유 --
                 mFavorite = new Favorite();
                 mFavorite.setAddress(place.getAddress());
                 mFavorite.setName(place.getName());
@@ -158,7 +168,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     mFavorite.setLongitude(place.getLatLng().longitude);
                 }
 
-
+                // 검색한 곳으로 가는 것
                 LatLng selectedPlace = new LatLng(place.getLatLng().latitude, place.getLatLng().longitude);
                 MarkerOptions markerOptions = new MarkerOptions().position(selectedPlace);
 //                        .snippet(place.getAddress())
@@ -188,7 +198,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                MapInfoFragment.newInstance(mFavorite).show(getChildFragmentManager(),"dialog");
+                MapInfoFragment.newInstance(mFavorite).show(getChildFragmentManager(), "dialog");
                 return false;
             }
         });
@@ -251,8 +261,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     startLocationUpdates();
 
 
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
                 } else {
                     // permission denied,
                     // 거부했을때 , 재요청하는 다이얼로그 띄우기 try again to request the permission.
@@ -313,4 +321,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
     }
 
+
+    @Override
+    public void onMapClick(LatLng latLng) {
+        Geocoder geocoder;
+        List<Address> addresses;
+        geocoder = new Geocoder(requireContext(), Locale.getDefault());
+
+        try {
+            addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+            String address = addresses.get(0).getAddressLine(0);
+
+            mMap.addMarker(new MarkerOptions().position(latLng).title(address));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
