@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.csg.airvisualapiexam.R;
+import com.csg.airvisualapiexam.models.Favorite;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -36,6 +37,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap mMap;
     private static final String TAG = MapFragment.class.getSimpleName();
     private PlacesClient mPlacesClient;
+    private Favorite mFavorite;
 
     public MapFragment() {
         // Required empty public constructor
@@ -44,7 +46,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-//        mPlacesClient = Places.createClient(context);
+        mPlacesClient = Places.createClient(context);
 
     }
 
@@ -88,15 +90,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 Log.d(TAG, "Place: " + place.toString());
 
                 // place 객체 범주가 넓다 보니깐 favorite 에 옮겨 심는 것
-//                mFavorite = new Favorite();
-//                mFavorite.setAddress(place.getAddress());
-//                mFavorite.setName(place.getName());
-//                mFavorite.setMemoId(place.getId());
-//                if (place.getLatLng() != null) {
-//
-//                    mFavorite.setLatitude(place.getLatLng().latitude);
-//                    mFavorite.setLongitude(place.getLatLng().longitude);
-//                }
+                mFavorite = new Favorite();
+                mFavorite.setAddress(place.getAddress());
+                mFavorite.setName(place.getName());
+                mFavorite.setMemoId(place.getId());
+                if (place.getLatLng() != null) {
+
+                    mFavorite.setLatitude(place.getLatLng().latitude);
+                    mFavorite.setLongitude(place.getLatLng().longitude);
+                }
 
 
                 LatLng selectedPlace = new LatLng(place.getLatLng().latitude, place.getLatLng().longitude);
@@ -128,7 +130,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-//                MapInfoFragment.newInstance(mFavorite).show(getChildFragmentManager(),"dialog");
+                MapInfoFragment.newInstance(mFavorite).show(getChildFragmentManager(),"dialog");
                 return false;
             }
         });
