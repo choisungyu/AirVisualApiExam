@@ -46,6 +46,9 @@ public class AirVisualFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+
+        }
 
 
 //        checkTedPermission();
@@ -104,17 +107,6 @@ public class AirVisualFragment extends Fragment {
 
         JsonAirVisualService service = retrofit.create(JsonAirVisualService.class);
 
-//        service.getPollutions().enqueue(new Callback<Pollutions>() {
-//            @Override
-//            public void onResponse(Call<Pollutions> call, Response<Pollutions> r  esponse) {
-//                mBinding.setPollution(response.body());
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Pollutions> call, Throwable t) {
-//                Log.d("AirVisualFragment", "onFailure: " + t.getLocalizedMessage());
-//            }
-//        });
 
         service.getData().enqueue(new Callback<Pollutions>() {
             @Override
