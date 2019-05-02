@@ -41,6 +41,13 @@ public class BindingAdapters {
 
     }
 
+    @BindingAdapter("temp")
+    public static void temp(TextView textView, String tp) {
+        textView.setText("온도 : " + tp + "도");
+
+    }
+
+
     @BindingAdapter("tempUrl")
     public static void tempUrl(ImageView imageView, String tempUrl) {
         Glide.with(imageView.getContext()).load("https://airvisual.com/images/" + tempUrl + ".png").into(imageView);

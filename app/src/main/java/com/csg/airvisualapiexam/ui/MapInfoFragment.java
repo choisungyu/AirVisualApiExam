@@ -83,7 +83,6 @@ public class MapInfoFragment extends DialogFragment {
                 Memo saveMemo = new Memo();
                 // 즐겨찾기 하는 버튼
                 saveMemo.setId(mFavorite.getMemoId());
-                saveMemo.setMemo(binding.memoEdit.getText().toString());
                 viewModel.insertOrUpdateMemo(saveMemo);
 
                 // dialog close

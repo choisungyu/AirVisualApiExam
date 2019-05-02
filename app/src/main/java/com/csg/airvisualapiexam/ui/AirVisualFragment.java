@@ -49,44 +49,7 @@ public class AirVisualFragment extends Fragment {
         if (getArguments() != null) {
 
         }
-
-
-//        checkTedPermission();
-//        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity());
-
     }
-
-
-//    private void checkTedPermission() {
-//
-//        PermissionListener permissionlistener = new PermissionListener() {
-//            @SuppressLint("MissingPermission")
-//            @Override
-//            public void onPermissionGranted() {
-//                mFusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<Location> task) {
-//                        mLatitude = LATITUDE;
-//                        mLongitude = LONGITUDE;
-//                    }
-//                });
-//            }
-//
-//            @Override
-//            public void onPermissionDenied(List<String> deniedPermissions) {
-//                Toast.makeText(requireActivity(), "권한이 없습니다.\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
-//            }
-//
-//
-//        };
-//
-//        TedPermission.with(requireActivity())
-//                .setPermissionListener(permissionlistener)
-//                .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]")
-//                .setPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-//                .check();
-//    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
