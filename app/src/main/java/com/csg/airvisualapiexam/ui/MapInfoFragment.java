@@ -71,11 +71,11 @@ public class MapInfoFragment extends DialogFragment {
         // 마지막 해주기
         binding.setFavorite(mFavorite);
 
-        // 질문...
-        Memo memo = viewModel.getMemo(mFavorite.getMemoId());
-        if (memo != null) {
-            binding.memoEdit.setText(memo.getMemo());
-        }
+        // 질문...!!
+//        Memo memo = viewModel.getMemo(mFavorite.getMemoId());
+//        if (memo != null) {
+//            binding.memoEdit.setText(memo.getMemo());
+//        }
 
         view.findViewById(R.id.save_button).setOnClickListener(new View.OnClickListener() {
             @Override
