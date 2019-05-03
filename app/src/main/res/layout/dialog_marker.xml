@@ -30,12 +30,15 @@
 
         <ImageView
             android:id="@+id/image_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="64dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/save_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.129"
             app:tempUrl="@{pollutions.data.current.weather.ic}"
             tools:src="@mipmap/ic_launcher" />
 
@@ -92,7 +95,7 @@
             android:id="@+id/save_button"
             android:layout_width="72dp"
             android:layout_height="34dp"
-            android:layout_marginStart="24dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:text="최근 날씨 등록"
@@ -100,6 +103,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView2"
-            app:layout_constraintVertical_bias="0.009" />
+            app:layout_constraintVertical_bias="0.005" />
     </android.support.constraint.ConstraintLayout>
 </layout>
