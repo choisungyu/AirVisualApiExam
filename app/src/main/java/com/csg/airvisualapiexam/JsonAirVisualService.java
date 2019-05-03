@@ -15,10 +15,10 @@ public interface JsonAirVisualService {
     @GET("v2/nearest_city?key=ttk422uxobr8xKYhk")
     Call<Pollutions> getData();
 
-    @GET("v2/nearest_city&key=ttk422uxobr8xKYhk")
-    Call<List<Favorite>> getPosition(
-        @Query("$lat") double lat,
-        @Query("$lon") double lon
+    @GET("v2/nearest_city?key=ttk422uxobr8xKYhk")
+    Call<Pollutions> getPosition(
+        @Query("lat") double lat,
+        @Query("lon") double lon
     );
 
 

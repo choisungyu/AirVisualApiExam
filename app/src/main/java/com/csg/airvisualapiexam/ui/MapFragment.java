@@ -81,17 +81,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private LocationRequest locationRequest;
     private LatLng mCurrentLocation;
     private JsonAirVisualService mService;
+    private Favorite favoritePosition;
     //--------
 
     public MapFragment() {
         // Required empty public constructor
     }
 
-    public static MapFragment newInstance() {
+    public static MapFragment newInstance(Favorite favoritePosition) {
 
         MapFragment mapFragment = new MapFragment();
         Bundle args = new Bundle();
-        //args.putSerializable("args",args);
+        args.putSerializable("favoritePosition", favoritePosition);
         mapFragment.setArguments(args);
         return mapFragment;
     }
@@ -106,6 +107,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         // 자기 현재 위치 표시하기
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext());
@@ -123,8 +125,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                     // 자기위치 마커 생성
                     MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.position(mCurrentLocation);
-                    markerOptions.title("현재위치" + mCurrentLocation.longitude + mCurrentLocation.latitude);
-//                  현재위치 mCurrentLocation.longitude + mCurrentLocation.latitude
+                    markerOptions.title("현재위치");
                     mMap.addMarker(markerOptions);
 
                     // 위치로 이동
@@ -228,29 +229,25 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                final Favorite favorite = new Favorite();
-                favorite.setAddress(marker.getTitle());
-                favorite.setLatitude(marker.getPosition().latitude);
-                favorite.setLongitude(marker.getPosition().longitude);
+                favoritePosition = new Favorite();
+                favoritePosition.setAddress(marker.getTitle());
+                favoritePosition.setLatitude(marker.getPosition().latitude);
+                favoritePosition.setLongitude(marker.getPosition().longitude);
 
-                final Pollutions pollutions = new Pollutions();
-
-
-                mService.getPosition(marker.getPosition().latitude, marker.getPosition().longitude).enqueue(new Callback<List<Favorite>>() {
+                mService.getPosition(marker.getPosition().latitude, marker.getPosition().longitude).enqueue(new Callback<Pollutions>() {
                     @Override
-                    public void onResponse(Call<List<Favorite>> call, Response<List<Favorite>> response) {
+                    public void onResponse(Call<Pollutions> call, Response<Pollutions> response) {
+                        MapInfoFragment.newInstance(favoritePosition, response.body()).show(getChildFragmentManager(), "dialog");
 
                     }
 
                     @Override
-                    public void onFailure(Call<List<Favorite>> call, Throwable t) {
-                        Log.d("mapFragment", "onFailure: " + t.getLocalizedMessage());
+                    public void onFailure(Call<Pollutions> call, Throwable t) {
 
                     }
                 });
 
-                MapInfoFragment.newInstance(favorite,pollutions).show(getChildFragmentManager(), "dialog");
-                return false;
+                return true;
             }
         });
 
