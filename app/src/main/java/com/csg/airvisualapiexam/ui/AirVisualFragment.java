@@ -25,8 +25,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AirVisualFragment extends Fragment {
 
-    public static final double LATITUDE = 37.4883078;
-    public static final double LONGITUDE = 126.8096653;
     private FragmentAirVisualBinding mBinding;
 //    private FusedLocationProviderClient mFusedLocationProviderClient;
 //    private double mLatitude;
@@ -36,6 +34,7 @@ public class AirVisualFragment extends Fragment {
     public AirVisualFragment() {
     }
 
+    // ?
     public static AirVisualFragment newInstance() {
         AirVisualFragment fragment = new AirVisualFragment();
         Bundle args = new Bundle();
@@ -61,7 +60,6 @@ public class AirVisualFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
-        Toast.makeText(requireContext(), "" + LATITUDE + "," + LONGITUDE, Toast.LENGTH_SHORT).show();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.airvisual.com/")

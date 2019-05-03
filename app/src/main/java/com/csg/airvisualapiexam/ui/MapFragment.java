@@ -24,9 +24,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.csg.airvisualapiexam.JsonAirVisualService;
 import com.csg.airvisualapiexam.MapsActivity;
 import com.csg.airvisualapiexam.R;
+import com.csg.airvisualapiexam.databinding.FragmentAirVisualBinding;
 import com.csg.airvisualapiexam.models.Favorite;
+import com.csg.airvisualapiexam.models.Pollution;
+import com.csg.airvisualapiexam.models.Pollutions;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -52,10 +56,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
+public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
 
     private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 1000;
     private GoogleMap mMap;
@@ -63,16 +73,27 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private PlacesClient mPlacesClient;
     private Favorite mFavorite;
 
+
     //--------
     private FusedLocationProviderClient mFusedLocationProviderClient;
 
     private LocationCallback mLocationCallback;
     private LocationRequest locationRequest;
     private LatLng mCurrentLocation;
+    private JsonAirVisualService mService;
     //--------
 
     public MapFragment() {
         // Required empty public constructor
+    }
+
+    public static MapFragment newInstance() {
+
+        MapFragment mapFragment = new MapFragment();
+        Bundle args = new Bundle();
+        //args.putSerializable("args",args);
+        mapFragment.setArguments(args);
+        return mapFragment;
     }
 
     @Override
@@ -103,6 +124,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                     MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.position(mCurrentLocation);
                     markerOptions.title("현재위치" + mCurrentLocation.longitude + mCurrentLocation.latitude);
+//                  현재위치 mCurrentLocation.longitude + mCurrentLocation.latitude
                     mMap.addMarker(markerOptions);
 
                     // 위치로 이동
@@ -188,6 +210,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         });
 
         //----------autocompleteFragment
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://api.airvisual.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        mService = retrofit.create(JsonAirVisualService.class);
+
     }
 
     @Override
@@ -198,18 +228,37 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                Favorite Favorite = new Favorite();
-                Favorite.setAddress(marker.getTitle());
-                Favorite.setLatitude(marker.getPosition().latitude);
-                Favorite.setLongitude(marker.getPosition().longitude);
+                final Favorite favorite = new Favorite();
+                favorite.setAddress(marker.getTitle());
+                favorite.setLatitude(marker.getPosition().latitude);
+                favorite.setLongitude(marker.getPosition().longitude);
+
+                final Pollutions pollutions = new Pollutions();
 
 
-                MapInfoFragment.newInstance(Favorite).show(getChildFragmentManager(), "dialog");
+                mService.getPosition(marker.getPosition().latitude, marker.getPosition().longitude).enqueue(new Callback<List<Favorite>>() {
+                    @Override
+                    public void onResponse(Call<List<Favorite>> call, Response<List<Favorite>> response) {
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Favorite>> call, Throwable t) {
+                        Log.d("mapFragment", "onFailure: " + t.getLocalizedMessage());
+
+                    }
+                });
+
+                MapInfoFragment.newInstance(favorite,pollutions).show(getChildFragmentManager(), "dialog");
                 return false;
             }
         });
 
-        mMap.setOnMapClickListener(this);
+        // 클릭
+//        mMap.setOnMapClickListener(this);
+        mMap.setOnMapLongClickListener(this);
+
+
         UiSettings mapUiSettings = mMap.getUiSettings();
         mapUiSettings.setZoomControlsEnabled(true);
 //        이거는 안되나?
@@ -331,7 +380,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
 
     @Override
-    public void onMapClick(LatLng latLng) {
+    public void onMapLongClick(LatLng latLng) {
         Geocoder geocoder;
         List<Address> addresses;
         geocoder = new Geocoder(requireContext(), Locale.getDefault());

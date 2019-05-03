@@ -16,19 +16,24 @@ import com.csg.airvisualapiexam.R;
 import com.csg.airvisualapiexam.databinding.DialogMarkerBinding;
 import com.csg.airvisualapiexam.models.Favorite;
 import com.csg.airvisualapiexam.models.Memo;
+import com.csg.airvisualapiexam.models.Pollutions;
 
 
 public class MapInfoFragment extends DialogFragment {
 
     private static final String KEY_FAVORITE = "favorite";
+    private static final String KEY_POLLUTIONS = "pollution";
     private Favorite mFavorite;
+    private Pollutions mPollutions;
 
-    public static MapInfoFragment newInstance(Favorite favorite) {
+
+    public static MapInfoFragment newInstance(Favorite favorite, Pollutions pollution) {
 
 
         MapInfoFragment fragment = new MapInfoFragment();
         Bundle args = new Bundle();
         args.putSerializable(KEY_FAVORITE, favorite);
+        args.putSerializable(KEY_POLLUTIONS, pollution);
         fragment.setArguments(args);
         return fragment;
     }
@@ -38,6 +43,8 @@ public class MapInfoFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mFavorite = (Favorite) getArguments().getSerializable(KEY_FAVORITE);
+            mPollutions = (Pollutions) getArguments().getSerializable(KEY_POLLUTIONS);
+
         } else {
             throw new IllegalArgumentException("favorite값 필수");
         }
@@ -49,19 +56,10 @@ public class MapInfoFragment extends DialogFragment {
         // activity의 viewModel을 가져와야 하는 것
         final MainViewModel viewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel.class);
 
+
         View view = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_marker, (ViewGroup) getView(), false);
-
-        final DialogMarkerBinding binding = DialogMarkerBinding.bind(view);
+        final DialogMarkerBinding dialogMarkerBinding = DialogMarkerBinding.bind(view);
 //        binding.setViewMdoel(viewModel);
-
-//        TextView nameTextView = view.findViewById(R.id.name_text);
-//        TextView addressTextView = view.findViewById(R.id.address_text);
-//        TextView latlngTextView = view.findViewById(R.id.latlng_text);
-//        final EditText memoEditTextView = view.findViewById(R.id.memo_edit);
-//
-//        nameTextView.setText(mFavorite.getName());
-//        addressTextView.setText(mFavorite.getAddress());
-//        latlngTextView.setText(mFavorite.getLatitude() + ", " + mFavorite.getLongitude());
 
 
         /*viewModel 의 getMemo 를 하면 Memo 를 리턴하여 파라미터 객체가 Memo가 됨.
@@ -69,7 +67,9 @@ public class MapInfoFragment extends DialogFragment {
          * */
 
         // 마지막 해주기
-        binding.setFavorite(mFavorite);
+        dialogMarkerBinding.setFavorite(mFavorite);
+        dialogMarkerBinding.setPollutions(mPollutions);
+
 
         // 질문...!!
 //        Memo memo = viewModel.getMemo(mFavorite.getMemoId());

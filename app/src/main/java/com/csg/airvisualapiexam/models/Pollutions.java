@@ -1,6 +1,8 @@
 package com.csg.airvisualapiexam.models;
 
-public class Pollutions {
+import java.io.Serializable;
+
+public class Pollutions implements Serializable {
 
     private String status;
     private Data data;

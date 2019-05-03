@@ -15,63 +15,50 @@
             name="favorite"
             type="com.csg.airvisualapiexam.models.Favorite" />
 
+        <variable
+            name="pollutions"
+            type="com.csg.airvisualapiexam.models.Pollutions" />
+
 
     </data>
 
     <android.support.constraint.ConstraintLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/image_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tempUrl="@{pollutions.data.current.weather.ic}"
+            tools:src="@mipmap/ic_launcher" />
 
         <TextView
             android:id="@+id/address_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:fontFamily="serif"
             android:text="@{favorite.address}"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/name_text"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="주소" />
-
-        <TextView
-            android:id="@+id/name_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:text="@{favorite.name}"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="제목" />
-
-        <CheckBox
-            android:id="@+id/favorite_check"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="160dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp"
-            android:button="@drawable/selector_favorite"
-            app:layout_constraintBottom_toTopOf="@+id/save_button"
-            app:layout_constraintStart_toEndOf="@+id/name_text"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
 
         <TextView
             android:id="@+id/latlng_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
             android:text='@{favorite.latitude + ", " + favorite.longitude}'
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/address_text"
             tools:text="위도경도" />
@@ -80,13 +67,13 @@
             android:id="@+id/save_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="92dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:text="날씨 보기"
+            android:text="최근 날씨 등록"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/latlng_text"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/latlng_text"
+            app:layout_constraintVertical_bias="0.017" />
     </android.support.constraint.ConstraintLayout>
 </layout>

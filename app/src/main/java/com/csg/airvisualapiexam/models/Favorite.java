@@ -16,8 +16,17 @@ public class Favorite implements Serializable {
     private String name;
     private double longitude;
     private double latitude;
-
+    private int url;
     private String memoId;
+
+    public int getUrl() {
+        return url;
+    }
+
+    public void setUrl(int url) {
+        this.url = url;
+    }
+
 
     public int getId() {
         return id;
