@@ -198,10 +198,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                MapInfoFragment.newInstance(mFavorite).show(getChildFragmentManager(), "dialog");
+                Favorite Favorite = new Favorite();
+                Favorite.setAddress(marker.getTitle());
+                Favorite.setLatitude(marker.getPosition().latitude);
+                Favorite.setLongitude(marker.getPosition().longitude);
+
+
+                MapInfoFragment.newInstance(Favorite).show(getChildFragmentManager(), "dialog");
                 return false;
             }
         });
+
+        mMap.setOnMapClickListener(this);
         UiSettings mapUiSettings = mMap.getUiSettings();
         mapUiSettings.setZoomControlsEnabled(true);
 //        이거는 안되나?
