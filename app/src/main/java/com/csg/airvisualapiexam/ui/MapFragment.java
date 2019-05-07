@@ -25,17 +25,13 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.csg.airvisualapiexam.JsonAirVisualService;
-import com.csg.airvisualapiexam.MapsActivity;
 import com.csg.airvisualapiexam.R;
-import com.csg.airvisualapiexam.databinding.FragmentAirVisualBinding;
 import com.csg.airvisualapiexam.models.Favorite;
-import com.csg.airvisualapiexam.models.Pollution;
 import com.csg.airvisualapiexam.models.Pollutions;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -82,7 +78,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private LocationRequest locationRequest;
     private LatLng mCurrentLocation;
     private JsonAirVisualService mService;
-    private Favorite favoritePosition;
+    private Favorite mFavoritePosition;
     //--------
 
     public MapFragment() {
@@ -93,7 +89,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
         MapFragment mapFragment = new MapFragment();
         Bundle args = new Bundle();
-        args.putSerializable("favoritePosition", favoritePosition);
+        args.putSerializable("mFavoritePosition", favoritePosition);
         mapFragment.setArguments(args);
         return mapFragment;
     }
@@ -151,10 +147,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 MarkerOptions markerOptions = new MarkerOptions();
                 markerOptions.position(mCurrentLocation);
                 markerOptions.title("현재위치");
-                //---
-
-
-                //---
 
                 mMap.addMarker(markerOptions);
 
@@ -207,8 +199,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 // TODO: Get info about the selected place.
                 Log.d(TAG, "Place: " + place.toString());
 
-                // place 객체 범주가 넓다 보니깐 favorite 에 옮겨 심는 것
                 // -- 옮겨 빼 놓는 이유 --
+                // place 객체 범주가 넓다 보니깐 favorite 에 옮겨 심는 것
                 mFavorite = new Favorite();
                 mFavorite.setAddress(place.getAddress());
                 mFavorite.setName(place.getName());
@@ -259,15 +251,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                favoritePosition = new Favorite();
-                favoritePosition.setAddress(marker.getTitle());
-                favoritePosition.setLatitude(marker.getPosition().latitude);
-                favoritePosition.setLongitude(marker.getPosition().longitude);
+                mFavoritePosition = new Favorite();
+                mFavoritePosition.setAddress(marker.getTitle());
+                mFavoritePosition.setLatitude(marker.getPosition().latitude);
+                mFavoritePosition.setLongitude(marker.getPosition().longitude);
 
                 mService.getPosition(marker.getPosition().latitude, marker.getPosition().longitude).enqueue(new Callback<Pollutions>() {
                     @Override
                     public void onResponse(Call<Pollutions> call, Response<Pollutions> response) {
-                        MapInfoFragment.newInstance(favoritePosition, response.body()).show(getChildFragmentManager(), "dialog");
+                        MapInfoFragment.newInstance(mFavoritePosition, response.body()).show(getChildFragmentManager(), "dialog");
 
                     }
 
