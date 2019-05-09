@@ -1,11 +1,12 @@
 package com.csg.airvisualapiexam.ui;
 
+import android.annotation.SuppressLint;
 import android.databinding.DataBindingUtil;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +14,10 @@ import android.view.ViewGroup;
 import com.csg.airvisualapiexam.JsonAirVisualService;
 import com.csg.airvisualapiexam.R;
 import com.csg.airvisualapiexam.databinding.FragmentAirVisualBinding;
-import com.csg.airvisualapiexam.models.Favorite;
 import com.csg.airvisualapiexam.models.Pollutions;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -26,24 +29,26 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class AirVisualFragment extends Fragment {
 
     private FragmentAirVisualBinding mBinding;
-    private Favorite mFavorite;
+//    private Favorite mFavorite;
+
+    private FusedLocationProviderClient mFusedLocationProviderClient;
 
     public AirVisualFragment() {
     }
 
-    public static AirVisualFragment newInstance(Favorite favorite) {
+    public static AirVisualFragment newInstance() {
         AirVisualFragment fragment = new AirVisualFragment();
         Bundle args = new Bundle();
-        args.putSerializable("favorite", favorite);
         fragment.setArguments(args);
         return fragment;
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mFavorite = (Favorite) getArguments().getSerializable("favorite");
+//            mFavorite = (Favorite) getArguments().getSerializable("favorite");
         }
     }
 
@@ -54,6 +59,7 @@ public class AirVisualFragment extends Fragment {
         return mBinding.getRoot();
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
@@ -63,49 +69,30 @@ public class AirVisualFragment extends Fragment {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        JsonAirVisualService service = retrofit.create(JsonAirVisualService.class);
+        final JsonAirVisualService service = retrofit.create(JsonAirVisualService.class);
 
 
-        // 원래 하던 임의의 데이터
-        service.getData().enqueue(new Callback<Pollutions>() {
+        // 자기 현재 위치 표시하기
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext());
+
+        mFusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
-            public void onResponse(Call<Pollutions> call, Response<Pollutions> response) {
-                mBinding.setPollution(response.body());
-            }
+            public void onSuccess(Location location) {
 
-            @Override
-            public void onFailure(Call<Pollutions> call, Throwable t) {
-                Log.d("AirVisualFragment", "onFailure: " + t.getLocalizedMessage());
+                // 현재 위치로 할 때, ( Favorite 를 데려와야 함 .. 현재 null )
+                service.getPosition(location.getLatitude(), location.getLongitude()).enqueue(new Callback<Pollutions>() {
+                    @Override
+                    public void onResponse(Call<Pollutions> call, Response<Pollutions> response) {
+                        // 해야될곳...
+                        mBinding.setPollution(response.body());
+                    }
+
+                    @Override
+                    public void onFailure(Call<Pollutions> call, Throwable t) {
+
+                    }
+                });
             }
         });
-
-        // 현재 위치로 할 때,
-//        service.getPosition(mFavorite.getLatitude(), mFavorite.getLongitude()).enqueue(new Callback<Pollutions>() {
-//            @Override
-//            public void onResponse(Call<Pollutions> call, Response<Pollutions> response) {
-//                // 해야될곳...
-////                MapInfoFragment.newInstance(favoritePosition, response.body()).show(getChildFragmentManager(), "dialog");
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Pollutions> call, Throwable t) {
-//
-//            }
-//        });
-//
-//        service.getPosition(marker.getPosition().latitude, marker.getPosition().longitude).enqueue(new Callback<Pollutions>() {
-//            @Override
-//            public void onResponse(Call<Pollutions> call, Response<Pollutions> response) {
-//                MapInfoFragment.newInstance(mFavoritePosition, response.body()).show(getChildFragmentManager(), "dialog");
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Pollutions> call, Throwable t) {
-//
-//            }
-//        });
-
     }
 }

@@ -1,6 +1,7 @@
 package com.csg.airvisualapiexam.repository;
 
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -13,7 +14,7 @@ import java.util.List;
 @Dao
 public interface FavoriteDao {
     @Query("SELECT * FROM favorite")
-    List<Favorite> getAll();
+    LiveData<List<Favorite>> getAll();
 
     @Insert
     void insertFavorite(Favorite favorite);

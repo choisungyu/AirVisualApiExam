@@ -26,7 +26,6 @@ public class Favorite implements Serializable {
         this.url = url;
     }
 
-
     public int getId() {
         return id;
     }

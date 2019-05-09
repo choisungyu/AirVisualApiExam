@@ -15,7 +15,6 @@ import com.csg.airvisualapiexam.MainViewModel;
 import com.csg.airvisualapiexam.R;
 import com.csg.airvisualapiexam.databinding.DialogMarkerBinding;
 import com.csg.airvisualapiexam.models.Favorite;
-import com.csg.airvisualapiexam.models.Memo;
 import com.csg.airvisualapiexam.models.Pollutions;
 
 
@@ -59,36 +58,23 @@ public class MapInfoFragment extends DialogFragment {
 
         View view = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_marker, (ViewGroup) getView(), false);
         final DialogMarkerBinding dialogMarkerBinding = DialogMarkerBinding.bind(view);
-//        binding.setViewMdoel(viewModel);
-
-
-        /*viewModel 의 getMemo 를 하면 Memo 를 리턴하여 파라미터 객체가 Memo가 됨.
-         * mFavorite memoId 의 MemoId
-         * */
+        dialogMarkerBinding.setViewModel(viewModel);
 
         // 마지막 해주기
         dialogMarkerBinding.setFavorite(mFavorite);
         dialogMarkerBinding.setPollutions(mPollutions);
 
-
-        // 질문...!!
-//        Memo memo = viewModel.getMemo(mFavorite.getMemoId());
-//        if (memo != null) {
-//            binding.memoEdit.setText(memo.getMemo());
-//        }
-
-        view.findViewById(R.id.save_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Memo saveMemo = new Memo();
-                // 즐겨찾기 하는 버튼
-                saveMemo.setId(mFavorite.getMemoId());
-                viewModel.insertOrUpdateMemo(saveMemo);
-
-                // dialog close
-                dismiss();
-            }
-        });
+//        view.findViewById(R.id.save_button).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Memo saveMemo = new Memo();
+//                // 즐겨찾기 하는 버튼
+//                saveMemo.setId(mFavorite.getMemoId());
+//
+//                // dialog close
+//                dismiss();
+//            }
+//        });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext()).setView(view);
 

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
         android:id="@+id/map"
@@ -12,6 +11,7 @@
         android:icon="@drawable/ic_weather_black_24dp"
         android:title="날씨보기" />
     <item
+        android:id="@+id/favorite"
         android:icon="@drawable/ic_lately_position_black_24dp"
         android:title="최근위치" />
 </menu>
